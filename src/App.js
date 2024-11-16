@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, lazy } from "react";
+import ErrorBoundary from "./helper/ErrorBoundary";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
+
+const AllNotes = lazy(() => import("./pages/AllNotes"));
+const Favorites = lazy(() => import("./pages/Favorites"));
+const Deleted = lazy(() => import("./pages/DeletedNotes"));
+const CreateFolder = lazy(() => import("./pages/CreateFolder"));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ErrorBoundary>
+      <Suspense>
+        <Router>
+          <div>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/">
+                <Route index element={<AllNotes />} />
+                <Route path="favorites" element={<Favorites />} />
+                <Route path="deleted" element={<Deleted />} />
+                <Route path="create-folder" element={<CreateFolder />} />
+              </Route>
+            </Routes>
+          </div>
+        </Router>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
